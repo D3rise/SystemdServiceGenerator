@@ -1,20 +1,32 @@
-import os, sys
+import os
+import sys
+import argparse
 
 def prompt_sudo():
     try:
         os.mkdir('/test')
         os.rmdir('/test')
-    except PermissionError as err:
+    except PermissionError:
         print('You need root permission to generate the service!')
         sys.exit(1)
 
 prompt_sudo()
 
-name = input('Enter name for service: ')
-type = input('Enter type for service (Press Enter for default): ')
-description = input('Enter description for service: ')
-startOperation = input('Enter service start command: ')
-stopOperation = input('Enter service stop command (Press Enter for none): ')
+parser = argparse.ArgumentParser()
+
+parser.add_argument("--name", help="Name of the service")
+parser.add_argument("--type", help="Type of the service")
+parser.add_argument("--desc", help="Description of the service")
+parser.add_argument("--start", help="Start cmd of the service")
+parser.add_argument("--stop", help="Stop cmd of the service")
+
+args = parser.parse_args(sys.argv[1:])
+
+name = args.name or input('Enter name for service: ')
+type = args.type or input('Enter type for service (Press Enter for default): ')
+description = args.desc or input('Enter description for service: ')
+startOperation = args.start or input('Enter service start command: ')
+stopOperation = args.stop or input('Enter service stop command (Press Enter for none): ')
 
 
 if type is '' or None:
